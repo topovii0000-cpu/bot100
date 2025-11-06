@@ -5,53 +5,74 @@ import json
 
 app = FastAPI()
 
-# Получаем данные из переменных окружения
-GROQ_URL = os.getenv("GROQ_URL", "https://api.groq.com/openai/v1/chat/completions?project_id=project_01k92gvcg6f8pveava7f06fw4g")
-GROQ_API_KEY = "eyJhbGciOiJSUzI1NiIsImtpZCI6Imp3ay1saXZlLTMyNDg5ODNiLWEzYWYtNGVlZi1iZDAyLTQ4YTEyOWU3NmIyYSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsicHJvamVjdC1saXZlLTVjYjM4ODBlLTc3NGUtNDNlYS1hYjkwLWY0ZDMyMzRlMzZkZCJdLCJleHAiOjE3NjI0Mjc1MjksImh0dHBzOi8vZ3JvcS5jb20vb3JnYW5pemF0aW9uIjp7ImlkIjoib3JnXzAxazkyZ3ZjMGpmOG50ejgydHNjdHh5ZDEyIn0sImh0dHBzOi8vc3R5dGNoLmNvbS9vcmdhbml6YXRpb24iOnsib3JnYW5pemF0aW9uX2lkIjoib3JnYW5pemF0aW9uLWxpdmUtODBiZDczNWQtMjlkYS00NmQzLWFmYjAtNGEzMDA2MWE0NjVmIiwic2x1ZyI6Im9yZ18wMWs5Mmd2YzBqZjhudHo4MnRzY3R4eWQxMiJ9LCJodHRwczovL3N0eXRjaC5jb20vc2Vzc2lvbiI6eyJpZCI6Im1lbWJlci1zZXNzaW9uLWxpdmUtNjMwYzQ1NjYtNTE2MC00ODIzLTgxNzEtNTNjZWYyNjE5Yjc5Iiwic3RhcnRlZF9hdCI6IjIwMjUtMTEtMDZUMDk6MzQ6NTVaIiwibGFzdF9hY2Nlc3NlZF9hdCI6IjIwMjUtMTEtMDZUMTE6MDc6MDlaIiwiZXhwaXJlc19hdCI6IjIwMjUtMTItMDZUMDk6MzQ6NTVaIiwiYXR0cmlidXRlcyI6eyJ1c2VyX2FnZW50IjoiIiwiaXBfYWRkcmVzcyI6IiJ9LCJhdXRoZW50aWNhdGlvbl9mYWN0b3JzIjpbeyJ0eXBlIjoib2F1dGgiLCJkZWxpdmVyeV9tZXRob2QiOiJvYXV0aF9nb29nbGUiLCJsYXN0X2F1dGhlbnRpY2F0ZWRfYXQiOiIyMDI1LTExLTA2VDA5OjM0OjU0WiIsImdvb2dsZV9vYXV0aF9mYWN0b3IiOnsiaWQiOiJvYXV0aC1yZWdpc3RyYXRpb24tbGl2ZS0xMDZlNjIwMC0zOWJhLTQ2NmItOTUyZi1iYjM4YTc3NDg2NGIiLCJlbWFpbF9pZCI6Im1lbWJlci1lbWFpbC1saXZlLWMxODcyZTIzLWRmMmItNDg0YS1hOWFhLTQ3MzNhMmM5MTNjYSIsInByb3ZpZGVyX3N1YmplY3QiOiIxMDAwMzkzNjgyMzI3MjQyMTEwNTQifX1dLCJyb2xlcyI6WyJzdHl0Y2hfbWVtYmVyIiwic3R5dGNoX2FkbWluIl19LCJpYXQiOjE3NjI0MjcyMjksImlzcyI6Imh0dHBzOi8vYXBpLnN0eXRjaGIyYi5ncm9xLmNvbSIsIm5iZiI6MTc2MjQyNzIyOSwic3ViIjoibWVtYmVyLWxpdmUtMWNiMmM2ZTctMzAzYi00NjI5LWFhNmUtZmI2Zjg5MTFlMzcwIn0.U8DLVlODijUVKJCWgrFNxWEpYjc8SaciV1jGoMAn27pNj9tto4nrip0QrCsM3N_jRseZnOWVCEPHInmSNSChuClKWZHmRnkbdVBpkj824zWAPEzpw9UdAQbSUNAo-qgV2cKhm554QT3hJU9HAGxkJ0MxATqdT63c0WYe5ucXoFjr1VsRlBlMX5HLefXFjSuyzJsjU5rrnLrwjlCpaUn82pmsk8uVbokXK0nsoNybTx0zdnxVvpO09_au9DSAWrw_k1zR3MYwkxh3M1CVgqDFB_-Zj7VcDpeToFEPbvIJz3D3A6bbGSRzU0HrzWI8bVC-5OkVwzHYm1dtCZpvVCnYvw"
+# Groq API данные
+GROQ_URL = os.getenv(
+    "GROQ_URL",
+    "https://api.groq.com/openai/v1/chat/completions?project_id=project_01k92gvcg6f8pveava7f06fw4g"
+)
 GROQ_ORG = os.getenv("GROQ_ORG", "org_01k92gvc0jf8ntz82tsctxyd12")
 
-HEADERS = {
-    "accept": "application/json",
-    "authorization": f"Bearer {GROQ_API_KEY}",
+# Stytch API
+STYTCH_AUTH_URL = "https://api.stytchb2b.groq.com/sdk/v1/b2b/sessions/authenticate"
+STYTCH_AUTH_HEADERS = {
+    "accept": "*/*",
+    "authorization": "Basic cHVibGljLXRva2VuLWxpdmUtNThkZjU3YTktYTFmNS00MDY2LWJjMGMtMmZmOTQyZGI2ODRmOndGeFZiMGR4MGhaUkVTRV9uQkVHU0Z2Z21BMF90QlVGZkczOV80ckY0eHQ0",
     "content-type": "application/json",
-    "groq-organization": GROQ_ORG,
     "origin": "https://console.groq.com",
     "referer": "https://console.groq.com/",
-    "user-agent": "FastAPI Client"
+    "user-agent": "FastAPI Client",
+    "x-sdk-client": "...",  # сюда вставь данные x-sdk-client из curl
+    "x-sdk-parent-host": "https://console.groq.com"
 }
 
 @app.post("/answer")
 async def answer(request: Request):
-    # Проверяем наличие API ключа
-    if not GROQ_API_KEY:
-        return {"error": "API key not configured"}
-    
     data = await request.json()
     user_message = data.get("message", "")
 
-    payload = {
-        "model": "openai/gpt-oss-20b",
-        "messages": [{"role":"system", "content":"Правильные ответы пиши в [], если их несколько то через запятую!"}
-            {"role": "user", "content": user_message}
-        ],
-        "temperature": 0.2,
-        "max_completion_tokens": 8192,
-        "stop": None,
-        "stream": False,
-        "reasoning_effort": "high"
-    }
-
     async with httpx.AsyncClient() as client:
-        response = await client.post(GROQ_URL, headers=HEADERS, json=payload)
+        # 1️⃣ Аутентификация на Stytch
+        auth_resp = await client.post(STYTCH_AUTH_URL, headers=STYTCH_AUTH_HEADERS, json={})
+        if auth_resp.status_code != 200:
+            return {"error": "Stytch authentication failed", "details": auth_resp.text}
+        
+        auth_data = auth_resp.json()
+        session_jwt = auth_data.get("session_jwt") or auth_data.get("data", {}).get("session_jwt")
+        if not session_jwt:
+            return {"error": "session_jwt not found in Stytch response"}
 
-    if response.status_code != 200:
-        return {"error": f"Groq API error {response.status_code}", "details": response.text}
+        # 2️⃣ Запрос к Groq API с использованием session_jwt в заголовках
+        groq_headers = {
+            "accept": "application/json",
+            "authorization": f"Bearer {session_jwt}",
+            "content-type": "application/json",
+            "groq-organization": GROQ_ORG,
+            "origin": "https://console.groq.com",
+            "referer": "https://console.groq.com/",
+            "user-agent": "FastAPI Client"
+        }
 
-    result = response.json()
-    content = result.get("choices", [{}])[0].get("message", {}).get("content", "")
-    return {"answer": content}
+        payload = {
+            "model": "openai/gpt-oss-20b",
+            "messages": [
+                {"role": "system", "content": "Правильные ответы пиши в [], если их несколько то через запятую!"},
+                {"role": "user", "content": user_message}
+            ],
+            "temperature": 0.2,
+            "max_completion_tokens": 8192,
+            "stop": None,
+            "stream": False,
+            "reasoning_effort": "high"
+        }
 
-# Добавляем корневой эндпоинт
+        groq_resp = await client.post(GROQ_URL, headers=groq_headers, json=payload)
+        if groq_resp.status_code != 200:
+            return {"error": f"Groq API error {groq_resp.status_code}", "details": groq_resp.text}
+
+        result = groq_resp.json()
+        content = result.get("choices", [{}])[0].get("message", {}).get("content", "")
+        return {"answer": content, "session_jwt": session_jwt}
+
 @app.get("/")
 async def root():
     return {"status": "API is running"}
