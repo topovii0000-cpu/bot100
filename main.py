@@ -49,5 +49,3 @@ async def answer(request: Request):
     content = result.get("choices", [{}])[0].get("message", {}).get("content", "")
     return {"answer": content}
 
-
-uvicorn
