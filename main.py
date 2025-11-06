@@ -31,15 +31,14 @@ async def answer(request: Request):
 
     payload = {
         "model": "openai/gpt-oss-20b",
-        "messages": [
+        "messages": [{"role":"system", "content":"Правильные ответы пиши в [], если их несколько то через запятую!"}
             {"role": "user", "content": user_message}
         ],
-        "temperature": 1,
+        "temperature": 0.2,
         "max_completion_tokens": 8192,
-        "top_p": 1,
         "stop": None,
         "stream": False,
-        "reasoning_effort": "medium"
+        "reasoning_effort": "high"
     }
 
     async with httpx.AsyncClient() as client:
