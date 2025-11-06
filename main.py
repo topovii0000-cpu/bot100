@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request
 import httpx
 import json
+import uvicorn
 
 app = FastAPI()
 
@@ -47,3 +48,6 @@ async def answer(request: Request):
     result = response.json()
     content = result.get("choices", [{}])[0].get("message", {}).get("content", "")
     return {"answer": content}
+
+
+uvicorn
